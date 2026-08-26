@@ -1,3 +1,10 @@
+/*
+** KORO PROJECT, 2026
+** LeetCode 2 - Add Two Numbers
+** File description:
+** add_two_numbers declarations
+*/
+
 #ifndef ADD_TWO_NUMBERS_H_
     #define ADD_TWO_NUMBERS_H_
 

@@ -1,5 +1,5 @@
 ##
-## KORO PROJECT, 2025
+## KORO PROJECT, 2026
 ##
 ## File description:
 ## Makefile for add_two_numbers
