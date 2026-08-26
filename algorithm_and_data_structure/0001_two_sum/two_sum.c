@@ -1,4 +1,5 @@
 /*
+** KORO PROJECT, 2025
 ** LeetCode 1 - Two Sum
 ** File description:
 ** Open-addressing hash map from value -> index, checking the complement
@@ -8,13 +9,13 @@
 #include <stdlib.h>
 #include "two_sum.h"
 
-static unsigned find_slot(int const *keys, char const *used, int cap,
-    int key)
+static unsigned find_slot(int const *keys, char const *used, int cap, int key)
 {
-    unsigned pos = ((unsigned)key * 2654435761u) % (unsigned)cap;
-
+    unsigned ukey = (unsigned)key;
+    unsigned pos = (ukey * 2654435761u) % (unsigned)cap;
+    
     while (used[pos] && keys[pos] != key)
-        pos = (pos + 1) % (unsigned)cap;
+        pos = (pos + 1) % (unsigned) cap;
     return (pos);
 }
 
@@ -25,37 +26,56 @@ static void release(int *keys, int *idx, char *used)
     free(used);
 }
 
-int *two_sum(int const *nums, int nums_size, int target, int *return_size)
+static void build_table(two_sum_ctx_t *ctx)
 {
-    int cap = 8;
-    int *keys;
-    int *idx;
-    char *used;
+    ctx->cap = 8;
+    while (ctx->cap < ctx->nums_size * 2)
+        ctx->cap *= 2;
+    ctx->keys = malloc(sizeof(int) * ctx->cap);
+    ctx->idx = malloc(sizeof(int) * ctx->cap);
+    ctx->used = calloc(ctx->cap, sizeof(char));
+}
+
+static int *make_pair(int a, int b)
+{
+    int *res = malloc(sizeof(int) * 2);
+    if (!res) return NULL;
+    res[0] = a;
+    res[1] = b;
+    return (res);
+}
+
+static int *search_pair(two_sum_ctx_t *ctx, int *return_size)
+{
     unsigned pos;
-    int *res;
     int i;
 
-    while (cap < nums_size * 2)
-        cap *= 2;
-    keys = malloc(sizeof(int) * cap);
-    idx = malloc(sizeof(int) * cap);
-    used = calloc(cap, sizeof(char));
-    for (i = 0; i < nums_size; i++) {
-        pos = find_slot(keys, used, cap, target - nums[i]);
-        if (used[pos]) {
-            res = malloc(sizeof(int) * 2);
-            res[0] = idx[pos];
-            res[1] = i;
+    for (i = 0; i < ctx->nums_size; i++) {
+        pos = find_slot(ctx->keys, ctx->used, ctx->cap,
+            ctx->target - ctx->nums[i]);
+        if (ctx->used[pos]) {
             *return_size = 2;
-            release(keys, idx, used);
-            return (res);
+            return (make_pair(ctx->idx[pos], i));
         }
-        pos = find_slot(keys, used, cap, nums[i]);
-        keys[pos] = nums[i];
-        idx[pos] = i;
-        used[pos] = 1;
+        pos = find_slot(ctx->keys, ctx->used, ctx->cap, ctx->nums[i]);
+        ctx->keys[pos] = ctx->nums[i];
+        ctx->idx[pos] = i;
+        ctx->used[pos] = 1;
     }
     *return_size = 0;
-    release(keys, idx, used);
     return (NULL);
+}
+
+int *twoSum(int *nums, int numsSize, int target, int *returnSize)
+{
+    two_sum_ctx_t ctx;
+    int *res;
+
+    ctx.nums = nums;
+    ctx.nums_size = numsSize;
+    ctx.target = target;
+    build_table(&ctx);
+    res = search_pair(&ctx, returnSize);
+    release(ctx.keys, ctx.idx, ctx.used);
+    return (res);
 }
