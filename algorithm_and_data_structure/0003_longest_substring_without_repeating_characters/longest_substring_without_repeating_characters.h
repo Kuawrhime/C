@@ -1,8 +1,8 @@
 /*
-** KORO PROJECT, 2025
+** KORO PROJECT, 2026
 ** LeetCode 3 - Longest Substring Without Repeating Characters
 ** File description:
-** longest_substring_without_repeating_characters declarations
+**
 */
 
 #ifndef LONGEST_SUBSTRING_WITHOUT_REPEATING_CHARACTERS_H_
