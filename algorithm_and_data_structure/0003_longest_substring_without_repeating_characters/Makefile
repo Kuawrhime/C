@@ -1,8 +1,8 @@
 ##
-## KORO PROJECT, 2025
+## KORO PROJECT, 2026
 ##
 ## File description:
-## Makefile for longest_substring_without_repeating_characters
+## 
 ##
 
 SRC		=	longest_substring_without_repeating_characters.c
